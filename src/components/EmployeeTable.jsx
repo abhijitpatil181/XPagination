@@ -1,9 +1,21 @@
 import Table from "./Table";
 import Pagination from "./Pagination";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const EmployeeTable = () => {
   const [pageNumber, setPageNumber] = useState(0);
+  const [allEmployeeData, setAllEmployeeData] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setAllEmployeeData(data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <>
@@ -16,8 +28,12 @@ const EmployeeTable = () => {
         }}
       >
         <h1>Employee Data Table</h1>
-        <Table pageNumber={pageNumber} />
-        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
+        {allEmployeeData.length > 0 && (
+          <div>
+            <Table pageNumber={pageNumber} allEmployeeData={allEmployeeData} />
+            <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
+          </div>
+        )}
       </div>
     </>
   );

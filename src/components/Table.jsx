@@ -3,30 +3,20 @@ import { useState } from "react";
 import { camelCaseHeader, filterData } from "../utils/helper";
 import "./table.css";
 
-const Table = ({ pageNumber }) => {
-  const [allEmployeeData, setAllEmployeeData] = useState([]);
+const Table = ({ pageNumber, allEmployeeData }) => {
   const [employeeData, setEmployeeData] = useState([]);
   const [columnHeaders, setColumnHeaders] = useState([]);
-
-  useEffect(() => {
-    fetch(
-      "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setAllEmployeeData(data);
-        let headers = Object.keys(data[0]).map((header) =>
-          camelCaseHeader(header)
-        );
-        setColumnHeaders(headers);
-      })
-      .catch((error) => console.log(error));
-  }, []);
 
   useEffect(() => {
     if (allEmployeeData) {
       let data = filterData(allEmployeeData, pageNumber);
       setEmployeeData(data);
+      if (columnHeaders.length === 0 && data.length !== 0) {
+        let headers = Object.keys(data[0]).map((header) =>
+          camelCaseHeader(header)
+        );
+        setColumnHeaders(headers);
+      }
     }
   }, [pageNumber, allEmployeeData]);
 
