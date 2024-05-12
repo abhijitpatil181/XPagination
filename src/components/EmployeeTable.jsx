@@ -14,7 +14,7 @@ const EmployeeTable = () => {
       .then((data) => {
         setAllEmployeeData(data);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => window.alert("failed to fetch data"));
   }, []);
 
   return (
